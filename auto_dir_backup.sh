@@ -141,7 +141,7 @@ OLDEST_FILE=$(find $OVER_DIR -maxdepth 1 -type f -printf '%T+ %p\n' | sort | hea
 
 if [ "$OVER_DEL" == "True" ]; then
 	echo "超容删除已启用，当前备份文件夹大小""$NOW_CAP_GiB""GiB""，设定超容值""$OVER_CAP""GiB，如果超过容量则会进行删除"
-	until [ $NOW_CAP_GiB -le $OVER_CAP ]; do
+	until [ $NOW_CAP_GiB -le $OVER_CAP ] || [ $NOW_FILE -le $FILE_LIM ]; do
 	
 		echo "当前备份文件夹大小""$NOW_CAP_GiB""GiB，大于设定超容值""$OVER_CAP""GiB，进行删除"
 
