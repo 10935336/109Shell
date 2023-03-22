@@ -29,6 +29,12 @@ You can copy 1 pair of files and checksums to another directory, which is usuall
 Unfortunately, the comments in this script are in Chinese.
 
 
+## update_github_hosts_from_next-hosts.sh
+
+Get the latest Github Host from https://github.com/ineo6/hosts and update it, which will help improve the Github network blockade in mainland China.
+
+Unfortunately, the comments in this script are in Chinese.
+
 <br>
 <br>
 <br>
@@ -61,3 +67,9 @@ Unfortunately, the comments in this script are in Chinese.
 auto_dir_backup.sh 和 auto_mysql_backup.sh 的配套工具。
 
 可以复制 1 对文件和校验码到另外一个目录，该目录通常是映射到本地的远程目录。可以通过 rclone 等工具完成。带容量控制，可以循环删除最旧文件直到容量达标或超出最少文件限制。
+
+## update_github_hosts_from_next-hosts.sh
+
+从 https://github.com/ineo6/hosts 获取最新的 Github Host 并更新，有助于改善中国大陆的 Github 网络封锁。
+
+仅更新现有 /etc/hosts 中的 以 # GitHub Host Start开 头，以 # GitHub Host End 结尾的内容。
