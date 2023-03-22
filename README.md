@@ -33,6 +33,8 @@ Unfortunately, the comments in this script are in Chinese.
 
 Get the latest Github Host from https://github.com/ineo6/hosts and update it, which will help improve the Github network blockade in mainland China.
 
+Only update existing /etc/hosts starting with # GitHub Host Start and ending with # GitHub Host End.
+
 Unfortunately, the comments in this script are in Chinese.
 
 <br>
@@ -72,4 +74,4 @@ auto_dir_backup.sh 和 auto_mysql_backup.sh 的配套工具。
 
 从 https://github.com/ineo6/hosts 获取最新的 Github Host 并更新，有助于改善中国大陆的 Github 网络封锁。
 
-仅更新现有 /etc/hosts 中的 以 # GitHub Host Start开 头，以 # GitHub Host End 结尾的内容。
+仅更新现有 /etc/hosts 中的 以 # GitHub Host Start 开头，以 # GitHub Host End 结尾的内容。
