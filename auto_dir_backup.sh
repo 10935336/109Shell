@@ -2,8 +2,8 @@
 #任意文件夹压缩加密备份脚本 - 此脚本可用于备份任意文件夹为压缩文件并生成校验码
 #Arbitrary folder compression encryption backup script - this script can be used to back up any folder as a compressed file and generate a verification code
 #Author: 10935336
-#Creation date：2022-10-30
-#Modified date：2023-03-22
+#Creation date: 2022-10-30
+#Modified date: 2023-03-22
 
 #### Require ####
 #需要 tar 版本大于等于 1.29。
@@ -24,6 +24,7 @@
 #### Variable #####
 #你需要填写本节变量。
 #You need to fill in the variables in this section.
+
 #备份加密秘钥
 readonly ENC_KEY=<enc_key路径>
 

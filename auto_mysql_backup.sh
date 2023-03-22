@@ -2,8 +2,8 @@
 #自动 MySQL 数据库备份脚本 - 此脚本会压缩并加密 MySQL 数据库备份为单文件并生成校验码。
 #Automatic MySQL database backup script - This script will compress and encrypt the MySQL database backup as a single file and generate a checksum.
 #Author: 10935336
-#Creation date：2022-09-28
-#Modified date：2023-03-22
+#Creation date: 2022-09-28
+#Modified date: 2023-03-22
 
 #### Require ####
 #运行本脚本需要 Percona XtraBackup 8.0，测试版本：8.0.30-23、8.0.29-22、8.0.28-21

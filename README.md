@@ -1,3 +1,7 @@
+[English](https://github.com/10935336/109Shell#english) | [简体中文](https://github.com/10935336/109Shell#%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+<br>
+
 # English
 
 A repository for my own Bash Shell scripts.
@@ -20,7 +24,7 @@ Unfortunately, the comments in this script are in Chinese.
 
 
 
-## backup_extra_copy
+## backup_extra_copy.sh
 
 Companion tools to auto_dir_backup.sh and auto_mysql_backup.sh.
 
@@ -46,7 +50,7 @@ Unfortunately, the comments in this script are in Chinese.
 <br>
 <br>
 
-# 中文
+# 简体中文
 
 我的 Bash Shell 脚本仓库。
 
@@ -64,7 +68,7 @@ Unfortunately, the comments in this script are in Chinese.
 此脚本会压缩并加密 MySQL 数据库备份为单文件并生成校验码。带容量控制，可以循环删除最旧文件直到容量达标或超出最少文件限制。
 
 
-## backup_extra_copy
+## backup_extra_copy.sh
 
 auto_dir_backup.sh 和 auto_mysql_backup.sh 的配套工具。
 

@@ -2,8 +2,8 @@
 #文件拷贝脚本 - 可用于复制一对文件至已映射到本地的远程目录（一个备份文件，一个校验值文件）带容量控制
 #File Copy Script - can be used to copy a pair file to a remote directory mapped to the local (a backup file and a checksum file) with capacity control
 #Author: 10935336
-#Creation date：2022-10-27
-#Modified date：2023-03-22
+#Creation date: 2022-10-27
+#Modified date: 2023-03-22
 
 #### Note ####
 #按后缀名将文件夹中'最新'的 2 个文件复制到另一个目录（一个备份文件，一个校验值文件）

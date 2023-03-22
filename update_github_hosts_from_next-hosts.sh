@@ -2,8 +2,8 @@
 #更新 Github Host - 从 https://github.com/ineo6/hosts 获取最新的 Github Host 并更新，有助于改善中国大陆的 Github 网络封锁。
 #Update Github Host - Get the latest Github Host from https://github.com/ineo6/hosts and update it, which will help improve the Github network blockade in mainland China.
 #Author: 10935336
-#Creation date：2023-02-03
-#Modified date：2023-03-22
+#Creation date: 2023-02-03
+#Modified date: 2023-03-22
 
 
 #### Variable #####
