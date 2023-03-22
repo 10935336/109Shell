@@ -19,11 +19,11 @@
 #'--encrypt-key-file'选项有 BUG，所以你需要直接用'--encrypt-key'选项。
 
 #### Prepare ####
-#1.备份加密秘钥
+#1.备份加密秘钥 enc_key
 #备份加密密码请单行写入 enc_key 文件，可以使用 'openssl rand -base64 24' 生成密码（256位)，官方文档是错的，结尾不能有CRLF，目录不同请自定义，并使用 chmod 600 保护。
 #或者直接使用秘钥生成命令：'printf '%s' "$(openssl rand -base64 24)" | sudo tee <秘钥目录> && echo'
 
-#2.数据库配置文件
+#2.数据库配置文件 db_conf
 #数据库用户和密码请用以下格式写入 db_conf 文件，也可以指定端口和套接字，目录不同请自定义，并使用 chmod 600 保护
 #[client]
 #user=username
@@ -32,7 +32,7 @@
 #socket=socketdir
 
 
-#### variable #####
+#### Variable #####
 #你需要填写本节变量。
 #You need to fill in the variables in this section.
 
@@ -74,7 +74,7 @@ FILE_LIM=6
 
 
 
-#### function ####
+#### Function ####
 
 # error 函数，你可以 error '某某某错误',来向 STDERR 输出信息并退出脚本
 function error {
