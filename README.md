@@ -8,7 +8,7 @@ Automatic folder backup script, can be used to backup any directory, I personall
 
 This script can be used to backup any folder as a compressed file and generate checksum. With capacity control, you can cycle through the oldest files until the capacity is reached or the minimum file limit is exceeded.
 
-Unfortunately, the comments in these scripts are in Chinese.
+Unfortunately, the comments in this script are in Chinese.
 
 ## auto_mysql_backup.sh
 
@@ -16,7 +16,7 @@ Automatic MySQL database backup script using Percona XtraBackup 8.0.
 
 This script compresses and encrypts MySQL database backups to a single file and generates checksums. With capacity control, you can delete the oldest files cyclically until the capacity is reached or the minimum file limit is exceeded.
 
-Unfortunately, the comments in these scripts are in Chinese.
+Unfortunately, the comments in this script are in Chinese.
 
 
 
@@ -26,7 +26,7 @@ Companion tools to auto_dir_backup.sh and auto_mysql_backup.sh.
 
 You can copy 1 pair of files and checksums to another directory, which is usually mapped to a local remote directory. This can be done with tools such as rclone. With capacity control, you can delete the oldest files cyclically until the capacity is reached or the minimum file limit is exceeded.
 
-Unfortunately, the comments in these scripts are in Chinese.
+Unfortunately, the comments in this script are in Chinese.
 
 
 <br>
