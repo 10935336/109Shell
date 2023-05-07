@@ -23,7 +23,6 @@ This script compresses and encrypts MySQL database backups to a single file and 
 Unfortunately, the comments in this script are in Chinese.
 
 
-
 ## backup_extra_copy.sh
 
 Companion tools to auto_dir_backup.sh and auto_mysql_backup.sh.
@@ -31,6 +30,21 @@ Companion tools to auto_dir_backup.sh and auto_mysql_backup.sh.
 You can copy a pair of files and checksums to another directory, which is usually mapped to a local remote directory. This can be done with tools such as rclone. With capacity control, you can delete the oldest files cyclically until the capacity is reached or the minimum file limit is exceeded.
 
 Unfortunately, the comments in this script are in Chinese.
+
+
+## update_github_hosts.sh
+
+Get the latest Github Host from multiple sources and update it to help improve Github internet blocking in mainland China.
+
+Currently 2 sources are supported:
+  - Update source 1 https://github.com/521xueweihan/GitHub520
+  - Update source 2 https://github.com/ineo6/hosts
+
+parameter:
+- The parameter `-c` or --cancel can delete the github-hosts in the current /etc/hosts
+- The parameter `-u <number>` can select the update source.
+
+In theory, it will not affect other hosts content.
 
 
 ## update_github_hosts_from_next-hosts.sh
@@ -74,6 +88,19 @@ auto_dir_backup.sh 和 auto_mysql_backup.sh 的配套工具。
 
 可以复制一对文件和校验码到另外一个目录，该目录通常是映射到本地的远程目录。可以通过 rclone 等工具完成。带容量控制，可以循环删除最旧文件直到容量达标或超出最少文件限制。
 
+## update_github_hosts.sh
+
+从多个源获取最新的 Github Host 并更新，有助于改善中国大陆的 Github 网络封锁。
+
+目前支持 2 个源：
+ - 更新源 1 https://github.com/521xueweihan/GitHub520
+ - 更新源 2 https://github.com/ineo6/hosts
+
+参数：
+- 参数 `-c` 或 --cancel 可以删除当前 /etc/hosts 中的 github-hosts
+- 参数 `-u <数字>` 可以选择更新源。
+
+理论上不会影响其他 hosts 内容。
 
 ## update_github_hosts_from_next-hosts.sh
 
