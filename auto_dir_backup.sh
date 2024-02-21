@@ -82,7 +82,7 @@ function env_check {
     if [ ! -r "${ENC_KEY}" ]; then
 		error "Cannot read encryption key at ${ENC_KEY}"
     fi
-#备份软件检查
+#软件检查
     TAR_VER=$(tar --version|awk 'NR==1{print $4}')
     if [ $(echo "${TAR_VER} >= 1.29" |bc) -eq 0 ]; then 
         error 'Your tar version is lower than 1.29 or not installed' 	
@@ -91,16 +91,36 @@ function env_check {
 	if ! command -v ${COMP_TYPE} &> /dev/null; then
 		error "${COMP_TYPE} not installed"
 	fi
+
+	if ! command -v find &> /dev/null; then
+		error "find not installed"
+	fi
+
+	if ! command -v du &> /dev/null; then
+		error "du not installed"
+	fi
+
+	if ! command -v awk &> /dev/null; then
+		error "awk not installed"
+	fi
+
+	if ! command -v sha256sum &> /dev/null; then
+		error "sha256sum not installed"
+	fi
+
+	if ! command -v openssl &> /dev/null; then
+		error "openssl not installed"
+	fi
 #加密密钥长度检查
     if [[ "$(wc -c ${ENC_KEY}|awk '{print $1}')" -ne 32 ]]; then
        error 'Encryption key length error'
     fi
 #备份输出目录检查
-    if [ ! -d ${OUT_DIR} ];then
+    if [ ! -d "${OUT_DIR}" ];then
        error "${OUT_DIR} folder does not exist"
     fi
 #超容检查目录检查
-    if [ ! -d ${OVER_CHK_DIR} ];then
+    if [ ! -d "${OVER_CHK_DIR}" ];then
        error "${OVER_CHK_DIR} folder does not exist"
     fi
 }
@@ -131,7 +151,7 @@ fi
 function hash_code_gen {
 #生成校验值
 if [ -f "${FULL_PATH}.${FILE_EXT}.aes256" ];then
-	sha256sum ${FULL_PATH}.${FILE_EXT}.aes256 > ${FULL_PATH}.${FILE_EXT}.aes256.sha256
+	sha256sum "${FULL_PATH}.${FILE_EXT}.aes256" > "${FULL_PATH}.${FILE_EXT}.aes256.sha256"
 else 
 	error "未找到备份文件，校验值生成失败"
 fi
@@ -148,32 +168,32 @@ fi
 #超容删除
 function capacity_limit {
 
-NOW_CAP=$(du -d 0  ${OVER_CHK_DIR} | awk '{print $1}')
+NOW_CAP=$(du -d 0  "${OVER_CHK_DIR}" | awk '{print $1}')
 NOW_CAP_GiB=$((NOW_CAP / 1024 / 1024))
-NOW_FILE=$(find ${OVER_CHK_DIR} -type f | wc -l)
-OLDEST_FILE=$(find ${OVER_CHK_DIR} -maxdepth 1 -type f -printf '%T+ %p\n' | sort | head -n 1|awk '{print $2}')
+NOW_FILE=$(find "${OVER_CHK_DIR}" -type f | wc -l)
+OLDEST_FILE=$(find "${OVER_CHK_DIR}" -maxdepth 1 -type f -printf '%T+ %p\n' | sort | head -n 1|awk '{print $2}')
 
 
 if [ "${OVER_DEL}" == "True" ]; then
 	echo "超容删除已启用，当前备份文件夹大小""${NOW_CAP_GiB}""GiB""，设定超容值""${OVER_CAP}""GiB，如果超过容量则会进行删除"
-	until [ ${NOW_CAP_GiB} -le ${OVER_CAP} ] || [ ${NOW_FILE} -le ${FILE_LIM} ]; do
+	until [ ${NOW_CAP_GiB} -le ${OVER_CAP} ] || [ "${NOW_FILE}" -le "${FILE_LIM}" ]; do
 	
 		echo "当前备份文件夹大小""${NOW_CAP_GiB}""GiB，大于设定超容值""${OVER_CAP}""GiB，进行删除"
 
-		if [ ${NOW_FILE} -gt ${FILE_LIM} ]; then
+		if [ "${NOW_FILE}" -gt "${FILE_LIM}" ]; then
 			echo "当前备份文件夹有""${NOW_FILE}""个文件，大于最低设定超容值""${FILE_LIM}""，开始删除"
 				if rm "${OLDEST_FILE}"; then
-				echo "已删除""${OLDEST_FILE}"
-					else
-				error "删除""${OLDEST_FILE}""失败"
+					echo "已删除""${OLDEST_FILE}"
+				else
+					error "删除""${OLDEST_FILE}""失败"
 				fi
-			else 
+		else 
 			error "当前备份文件夹有""${NOW_FILE}""个文件，小于等于最低设定值""${FILE_LIM}""......""当前备份文件夹大小""${NOW_CAP_GiB}""GiB，设定超容值""${OVER_CAP}""GiB""......""推荐进行检查是否单个备份文件过大"
 		fi
 		
-		OLDEST_FILE=$(find ${OVER_CHK_DIR} -maxdepth 1 -type f -printf '%T+ %p\n' | sort | head -n 1|awk '{print $2}')
-		NOW_FILE=$(find ${OVER_CHK_DIR} -type f | wc -l)
-		NOW_CAP=$(du -d 0  ${OVER_CHK_DIR} | awk '{print $1}')
+		OLDEST_FILE=$(find "${OVER_CHK_DIR}" -maxdepth 1 -type f -printf '%T+ %p\n' | sort | head -n 1|awk '{print $2}')
+		NOW_FILE=$(find "${OVER_CHK_DIR}" -type f | wc -l)
+		NOW_CAP=$(du -d 0  "${OVER_CHK_DIR}" | awk '{print $1}')
 		NOW_CAP_GiB=$((NOW_CAP / 1024 / 1024))
 		echo "当前备份文件夹大小""${NOW_CAP_GiB}""GiB"
 		echo
