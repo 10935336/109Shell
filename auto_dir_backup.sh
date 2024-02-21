@@ -46,6 +46,9 @@ readonly FILE_EXT=tar.zst
 #压缩等级，gzip 1-9，zstd 1-19，数值越高文件越小越慢
 readonly COMP_LV=9
 
+#tar 的额外指令，比如排除路径 --exclude=/path，默认留空
+readonly EXTRA_COM=""
+
 
 #备份文件输出文件名，默认格式为 'DIR_2022-10-01_21-20'
 readonly NOW_DATE=$(date '+%Y-%m-%d_%H-%M')
@@ -133,7 +136,7 @@ function dir_backup {
 echo "开始备份"
 
 #如不加密则替换为此命令，但其他部分也需要修改 tar cvf - "${SOURCE_DIR}"" 2>/dev/null | ${COMP_TYPE} -${COMP_LV} > "${FULL_PATH}.${FILE_EXT}"
-if tar cvf - "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
+if tar cvf - "$EXTRA_COM" "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
 	echo "备份命令执行完毕"
 else
 	error "备份命令执行失败"
