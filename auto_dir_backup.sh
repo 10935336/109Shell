@@ -130,13 +130,13 @@ function env_check {
 
 
 
-#文件夹备份并加密，很遗憾为了不造成额外读写，加密将在一条命令中
+#文件夹备份并加密，为了不造成额外读写和落盘非加密数据，加密将在一条命令中
 function dir_backup {
 
 echo "开始备份"
 
 #如不加密则替换为此命令，但其他部分也需要修改 tar cvf - "${SOURCE_DIR}"" 2>/dev/null | ${COMP_TYPE} -${COMP_LV} > "${FULL_PATH}.${FILE_EXT}"
-if tar cvf - "$EXTRA_COM" "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
+if tar cvf - "${EXTRA_COM}" "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
 	echo "备份命令执行完毕"
 else
 	error "备份命令执行失败"
