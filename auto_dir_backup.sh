@@ -3,7 +3,7 @@
 #Arbitrary folder compression encryption backup script - this script can be used to back up any folder as a compressed file and generate a verification code
 #Author: 10935336
 #Creation date: 2022-10-30
-#Modified date: 2024-02-21
+#Modified date: 2024-02-23
 
 #### Require ####
 #需要 tar 版本大于等于 1.29。
@@ -123,8 +123,10 @@ function env_check {
        error "${OUT_DIR} folder does not exist"
     fi
 #超容检查目录检查
-    if [ ! -d "${OVER_CHK_DIR}" ];then
-       error "${OVER_CHK_DIR} folder does not exist"
+    if [ "${OVER_DEL}" == "True" ]; then
+	    if [ ! -d "${OVER_CHK_DIR}" ]; then
+	       error "${OVER_CHK_DIR} folder does not exist"
+	    fi
     fi
 }
 
@@ -170,14 +172,13 @@ fi
 
 #超容删除
 function capacity_limit {
+if [ "${OVER_DEL}" == "True" ]; then
 
 NOW_CAP=$(du -d 0  "${OVER_CHK_DIR}" | awk '{print $1}')
 NOW_CAP_GiB=$((NOW_CAP / 1024 / 1024))
 NOW_FILE=$(find "${OVER_CHK_DIR}" -type f | wc -l)
 OLDEST_FILE=$(find "${OVER_CHK_DIR}" -maxdepth 1 -type f -printf '%T+ %p\n' | sort | head -n 1|awk '{print $2}')
 
-
-if [ "${OVER_DEL}" == "True" ]; then
 	echo "超容删除已启用，当前备份文件夹大小""${NOW_CAP_GiB}""GiB""，设定超容值""${OVER_CAP}""GiB，如果超过容量则会进行删除"
 	until [ ${NOW_CAP_GiB} -le ${OVER_CAP} ] || [ "${NOW_FILE}" -le "${FILE_LIM}" ]; do
 	
