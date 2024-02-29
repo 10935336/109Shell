@@ -3,7 +3,7 @@
 #Arbitrary folder compression encryption backup script - this script can be used to back up any folder as a compressed file and generate a verification code
 #Author: 10935336
 #Creation date: 2022-10-30
-#Modified date: 2024-02-23
+#Modified date: 2024-02-29
 
 #### Require ####
 #需要 tar 版本大于等于 1.29。
@@ -28,7 +28,7 @@
 #You need to fill in the variables in this section.
 
 #备份加密秘钥
-readonly ENC_KEY=<enc_key路径>
+readonly ENC_KEY=<加密秘钥路径>
 
 #要备份的目录，结尾需要/，tar 会自行处理绝对路径
 readonly SOURCE_DIR=<要备份的目录/>
@@ -46,16 +46,16 @@ readonly FILE_EXT=tar.zst
 #压缩等级，gzip 1-9，zstd 1-19，数值越高文件越小越慢
 readonly COMP_LV=9
 
-#tar 的额外指令，比如排除路径 --exclude=/path，默认留空
-readonly EXTRA_COM=""
+#tar 的额外指令，比如排除路径 '--exclude=/path'，默认留空''
+readonly EXTRA_COM=''
 
 
 #备份文件输出文件名，默认格式为 'DIR_2022-10-01_21-20'
 readonly NOW_DATE=$(date '+%Y-%m-%d_%H-%M')
-readonly OUT_NAME="DIR_""$NOW_DATE"
+readonly OUT_NAME="DIR_""${NOW_DATE}"
 
 #勿动，备份文件完整路径
-readonly FULL_PATH=${OUT_DIR}${OUT_NAME}
+readonly FULL_PATH="${OUT_DIR}${OUT_NAME}"
 
 
 #是否启用超容删除，True 为启用，其他值为禁用。循环删除最旧文件直到容量达标或超出文件限制
@@ -137,8 +137,7 @@ function dir_backup {
 
 echo "开始备份"
 
-#如不加密则替换为此命令，但其他部分也需要修改 tar cvf - "${SOURCE_DIR}"" 2>/dev/null | ${COMP_TYPE} -${COMP_LV} > "${FULL_PATH}.${FILE_EXT}"
-if tar cvf - "${EXTRA_COM}" "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
+if tar cvf - ${EXTRA_COM} "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
 	echo "备份命令执行完毕"
 else
 	error "备份命令执行失败"
@@ -216,3 +215,6 @@ env_check
 dir_backup
 hash_code_gen
 capacity_limit
+
+echo "备份脚本执行完毕"
+echo

@@ -40,10 +40,10 @@
 #You need to fill in the variables in this section.
 
 #备份加密秘钥
-readonly ENC_KEY=<enc_key路径>
+readonly ENC_KEY=<加密秘钥路径>
 
 #数据库配置文件
-readonly DB_CONF=<db_conf路径>
+readonly DB_CONF=<数据库配置文件路径>
 
 
 #可选命令默认留空''，填写这个可以忽略版本检查 '--no-server-version-check'
@@ -245,3 +245,4 @@ cleanup
 
 
 echo "备份脚本执行完毕"
+echo

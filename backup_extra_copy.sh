@@ -3,7 +3,7 @@
 #File Copy Script - Can be used to copy a pair of files (a backup file, a check value file) to an additional folder (such as a remote folder mapped to the local) with capacity control
 #Author: 10935336
 #Creation date: 2022-10-27
-#Modified date: 2024-02-23
+#Modified date: 2024-02-29
 
 #### Note ####
 #按后缀名将文件夹中'最新'的 2 个文件复制到另一个目录（一个备份文件，一个校验值文件）
@@ -60,8 +60,10 @@ function env_check {
         error "${EXTRA_DIR} folder does not exist"
     fi
 #超容检查目录检查
-    if [ ! -d "${OVER_CHK_DIR}" ];then
-        error "${OVER_CHK_DIR} folder does not exist"
+    if [ "${OVER_DEL}" == "True" ]; then
+	    if [ ! -d "${OVER_CHK_DIR}" ]; then
+	       error "${OVER_CHK_DIR} folder does not exist"
+	    fi
     fi
 #软件检查
 	if ! command -v awk &> /dev/null; then
@@ -158,5 +160,5 @@ trap 'error "意外错误，复制失败"' ERR
 cp_to_extra
 capacity_limit
 
-
-
+echo "复制脚本执行完毕"
+echo
