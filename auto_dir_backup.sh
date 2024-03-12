@@ -3,7 +3,7 @@
 #Arbitrary folder compression encryption backup script - this script can be used to back up any folder as a compressed file and generate a verification code
 #Author: 10935336
 #Creation date: 2022-10-30
-#Modified date: 2024-02-29
+#Modified date: 2024-03-12
 
 #### Require ####
 #需要 tar 版本大于等于 1.29。
@@ -40,8 +40,8 @@ readonly OUT_DIR=<备份文件输出目录/>
 #压缩类型，gzip 或 zstd
 readonly COMP_TYPE=zstd
 
-#文件后缀，gzip 为 tar.gz，zstd 为 tar.zst
-readonly FILE_EXT=tar.zst
+#文件后缀，gzip 为 tar.gz.aes256   zstd 为 tar.zst.aes256
+readonly FILE_EXT=tar.zst.aes256
 
 #压缩等级，gzip 1-9，zstd 1-19，数值越高文件越小越慢
 readonly COMP_LV=9
@@ -114,6 +114,10 @@ function env_check {
 	if ! command -v openssl &> /dev/null; then
 		error "openssl not installed"
 	fi
+
+	if ! command -v basename &> /dev/null; then
+		error "basename not installed"
+	fi
 #加密密钥长度检查
     if [[ "$(wc -c ${ENC_KEY}|awk '{print $1}')" -ne 32 ]]; then
        error 'Encryption key length error'
@@ -137,14 +141,15 @@ function dir_backup {
 
 echo "开始备份"
 
-if tar cvf - ${EXTRA_COM} "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} |openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:$ENC_KEY -out "${FULL_PATH}.${FILE_EXT}.aes256" ; then
+if tar cvf - ${EXTRA_COM} "${SOURCE_DIR}" 2>/dev/null| ${COMP_TYPE} -${COMP_LV} | openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:${ENC_KEY} -out "${FULL_PATH}.${FILE_EXT}" ; then
 	echo "备份命令执行完毕"
 else
 	error "备份命令执行失败"
 fi
 
-if [ -f "${FULL_PATH}.${FILE_EXT}.aes256" ]; then
-	echo "备份文件成功，备份文件是 ${FULL_PATH}.${FILE_EXT}.aes256"
+if [ -f "${FULL_PATH}.${FILE_EXT}" ]; then
+	echo "备份文件成功，备份文件是 ${FULL_PATH}.${FILE_EXT}"
+	echo "备份文件大小为 $(du -h ${FULL_PATH}.${FILE_EXT} | awk '{print $1}')"
 else
 	error "备份文件失败"
 fi
@@ -154,14 +159,14 @@ fi
 #生成校验值函数
 function hash_code_gen {
 #生成校验值
-if [ -f "${FULL_PATH}.${FILE_EXT}.aes256" ];then
-	sha256sum "${FULL_PATH}.${FILE_EXT}.aes256" > "${FULL_PATH}.${FILE_EXT}.aes256.sha256"
+if [ -f "${FULL_PATH}.${FILE_EXT}" ];then
+	sha256sum "${FULL_PATH}.${FILE_EXT}" > "${FULL_PATH}.${FILE_EXT}.sha256"
 else 
 	error "未找到备份文件，校验值生成失败"
 fi
 
-if [ -f "${FULL_PATH}.${FILE_EXT}.aes256.sha256" ]; then
-	echo "校验值生成完毕，校验文件是 ${FULL_PATH}.${FILE_EXT}.aes256.sha256"
+if [ -f "${FULL_PATH}.${FILE_EXT}.sha256" ]; then
+	echo "校验值生成完毕，校验文件是 ${FULL_PATH}.${FILE_EXT}.sha256"
 else 
 	error "校验值生成失败"
 fi

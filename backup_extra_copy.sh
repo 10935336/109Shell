@@ -3,11 +3,11 @@
 #File Copy Script - Can be used to copy a pair of files (a backup file, a check value file) to an additional folder (such as a remote folder mapped to the local) with capacity control
 #Author: 10935336
 #Creation date: 2022-10-27
-#Modified date: 2024-02-29
+#Modified date: 2024-03-12
 
 #### Note ####
 #按后缀名将文件夹中'最新'的 2 个文件复制到另一个目录（一个备份文件，一个校验值文件）
-#如提取某文件夹中后缀为 xbstream.ase256.sha256 和 xbstream.ase256 的最新两个文件并复制到另一个文件夹
+#如提取某文件夹中后缀为 xbstream.aes256.sha256 和 xbstream.aes256 的最新两个文件并复制到另一个文件夹
 
 
 #### Variable #####
@@ -20,10 +20,10 @@ readonly SOURCE_DIR=<要从这里复制文件的目录/>
 #要复制到的文件夹，结尾需要/
 readonly EXTRA_DIR=<远程映射到本地的目录/>
 
-#文件后缀名 A（默认为校验文件） 'xbstream.ase256.sha256'  'tar.zst.aes256.sha256'
+#文件后缀名 A（默认为校验文件）例如 'xbstream.aes256.sha256'  'tar.zst.aes256.sha256'
 readonly FILE_SUFFIX_A=tar.zst.aes256.sha256
 
-#文件后缀名 B（默认为备份文件） 'xbstream.ase256'  'tar.zst.aes256'
+#文件后缀名 B（默认为备份文件）例如 'xbstream.aes256'  'tar.zst.aes256'
 readonly FILE_SUFFIX_B=tar.zst.aes256
 
 
@@ -77,32 +77,41 @@ function env_check {
 	if ! command -v du &> /dev/null; then
 		error "du not installed"
 	fi
+
+	if ! command -v basename &> /dev/null; then
+		error "basename not installed"
+	fi
 }
 
 
 
 #复制到额外文件夹
 function cp_to_extra { 
-#获取完整文件名A
-SHA=$(ls -t "${SOURCE_DIR}" | grep "${FILE_SUFFIX_A}$" | head -n2 | awk 'NR==1{print $0}')
-if ! [[ $SHA =~ "${FILE_SUFFIX_A}" ]];then
-	error "A 文件（默认为校验文件）提取不正确，请检查脚本，提取结果为 ${SHA}"
+#获取完整文件名 A
+SHA_PATH=$(ls -t "${SOURCE_DIR}"*."${FILE_SUFFIX_A}" | head -n 1)
+if [ -z "${SHA_PATH}" ] || [ ! -f "${SHA_PATH}" ]; then
+	error "A 文件（默认为校验文件）后缀 ${FILE_SUFFIX_A} 提取不正确，请检查脚本，提取结果为 ${SHA_PATH}"
 else
-	echo "A 文件（默认为校验文件）提取成功，提取结果为 ${SHA}"
+	echo "A 文件（默认为校验文件）提取成功，提取结果为 ${SHA_PATH}"
+	SHA=$(basename "${SHA_PATH}")
 fi
 
-#获取完整文件名B
-FILE=$(ls -t "${SOURCE_DIR}" | grep "${FILE_SUFFIX_B}$" | head -n2 | awk 'NR==2{print $0}')
-if ! [[ $FILE =~ "${FILE_SUFFIX_B}" ]];then
-	error "B 文件（默认为备份文件）提取不正确，请检查脚本，提取结果为 ${FILE}"
+#获取完整文件名 B
+FILE_PATH=$(ls -t "${SOURCE_DIR}"*."${FILE_SUFFIX_B}" | head -n 1)
+if [ -z "${FILE_PATH}" ] || [ ! -f "${FILE_PATH}" ]; then
+	error "B 文件（默认为备份文件）后缀 ${FILE_SUFFIX_B} 提取不正确，请检查脚本，提取结果为 ${FILE_PATH}"
 else
-	echo "B 文件（默认为备份文件）提取成功，提取结果为 ${FILE}"
+	echo "B 文件（默认为备份文件）提取成功，提取结果为 ${FILE_PATH}"
+	FILE=$(basename "${FILE_PATH}")
 fi
+
+
 
 echo "开始复制 A 文件（默认为校验文件）"
 
 if cp "${SOURCE_DIR}${SHA}" "${EXTRA_DIR}";then
 	echo "A 文件（默认为校验文件）复制成功，来源 ${SOURCE_DIR}${SHA}，目标 ${EXTRA_DIR}${SHA}"
+	echo "A 文件大小为 $(du -h ${SOURCE_DIR}${SHA} | awk '{print $1}')"
 else
 	error "A 文件（默认为校验文件）复制失败，来源 ${SOURCE_DIR}${SHA}，目标 ${EXTRA_DIR}${SHA}"
 fi
@@ -111,9 +120,11 @@ echo "开始复制 B 文件（默认为备份文件）"
 
 if cp "${SOURCE_DIR}${FILE}" "${EXTRA_DIR}";then
 	echo "B 文件（默认为备份文件）复制成功，来源 ${SOURCE_DIR}${FILE} 目标 ${EXTRA_DIR}${FILE}"
+	echo "B 文件大小为 $(du -h ${SOURCE_DIR}${FILE} | awk '{print $1}')"
 else
 	error "B 文件（默认为备份文件）复制失败，来源 ${SOURCE_DIR}${FILE} 目标 ${EXTRA_DIR}${FILE}"
 fi
+
 
 }
 

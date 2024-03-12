@@ -3,7 +3,7 @@
 #Automatic MySQL database backup script - This script will compress and encrypt the MySQL database backup as a single file and generate a checksum.
 #Author: 10935336
 #Creation date: 2022-09-28
-#Modified date: 2024-02-29
+#Modified date: 2024-03-12
 
 #### Require ####
 #运行本脚本需要 Percona XtraBackup 8.0，测试版本：8.0.35-30、8.0.31-24、8.0.30-23、8.0.29-22、8.0.28-21
@@ -59,8 +59,8 @@ readonly COMP_CMD_OPT=''
 readonly OUT_DIR=<备份文件输出目录/>
 
 #备份文件输出文件名，默认格式为 'MYSQL_2022-10-01_21-20'
-readonly NOW_DATA=$(date '+%Y-%m-%d_%H-%M')
-readonly OUT_NAME="MYSQL_""${NOW_DATA}"
+readonly NOW_DATE=$(date '+%Y-%m-%d_%H-%M')
+readonly OUT_NAME="MYSQL_""${NOW_DATE}"
 
 #临时文件夹路径，默认 '/tmp/xtrabackup/'
 readonly TMP_DIR='/tmp/xtrabackup/'
@@ -68,8 +68,8 @@ readonly TMP_DIR='/tmp/xtrabackup/'
 #临时 STDERR 输出路径，默认 "${TMP_DIR}/xtrabackup_stderr.txt"
 readonly TMP_STDERR="${TMP_DIR}/xtrabackup_stderr.txt"
 
-#文件后缀默认 xbstream.ase256
-readonly FILE_EXT=xbstream.ase256
+#文件后缀默认 xbstream.aes256
+readonly FILE_EXT=xbstream.aes256
 
 
 #勿动，备份文件完整路径
@@ -130,6 +130,10 @@ function env_check {
 	if ! command -v openssl &> /dev/null; then
 		error "openssl not installed"
 	fi
+
+	if ! command -v basename &> /dev/null; then
+		error "basename not installed"
+	fi
 #加密密钥长度检查
     if [[ "$(wc -c "${ENC_KEY}" | awk '{print $1}')" -ne 32 ]]; then
         error 'Encryption key length incorrect'
@@ -171,6 +175,7 @@ fi
 
 if [ -f "${FULL_PATH}.${FILE_EXT}" ]; then
 	echo "备份文件成功，备份文件是 ${FULL_PATH}.${FILE_EXT}"
+	echo "备份文件大小：$(du -h ${FULL_PATH}.${FILE_EXT} | awk '{print $1}')"
 else
 	error "备份文件失败"
 fi

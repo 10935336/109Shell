@@ -167,10 +167,8 @@ echo "开始备份"
 
 #pg_dumpall 用的环境变量
 export PGPASSFILE="${DB_CONF}"
-export PGUSER="${DB_USER}"
 
-#注意 xtrabackup 的那个日志备份过程输出是 STDERR
-if pg_dumpall -v --host=${DB_HOST} --port=${DB_PORT} --username=${DB_USER} | ${COMP_TYPE} -${COMP_LV} | openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:${ENC_KEY} -out "${FULL_PATH}.${FILE_EXT}" 2>"${TMP_STDERR}" ; then
+if pg_dumpall --host=${DB_HOST} --port=${DB_PORT} --username=${DB_USER} | ${COMP_TYPE} -${COMP_LV} | openssl enc -aes-256-cbc -e -salt -pbkdf2 -pass file:${ENC_KEY} -out "${FULL_PATH}.${FILE_EXT}" 2>"${TMP_STDERR}" ; then
 	echo "备份命令执行完毕"
 else
 	echo "备份命令执行失败，错误信息如下:"
